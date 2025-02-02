@@ -7,12 +7,11 @@ import xgboost
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 
-csv_file='data\\final_df (1).csv'
-df=pd.read_csv(csv_file)
+df=pd.read_csv('data\\final_df (1).csv')
 with open(r'data\HousePricePredictionModel (1).pkl', 'rb') as file:
     model = pickle.load(file)
 with open("data\data_description.txt", "r") as file:
-    content = file.read()  # Read the entire file
+    content = file.read()
 
 option = st.sidebar.radio('Select an option:', ['Price Prediction', 'Exploratory Data Analysis', 'Information'])
 st.title('House Price Prediction 🏡')
