@@ -83,28 +83,26 @@ if option=='Price Prediction':
     final_df=category_onehot_multicols(catcols)
     final_df=final_df.loc[:,~final_df.columns.duplicated()]
     final_df= final_df.replace({False: 0, True: 1})
-    ffinal_df=final_df.drop(['SalePrice'],axis=1)
+    input_df=final_df.drop(['SalePrice'],axis=1)
 
-    b=pd.DataFrame(columns=ffinal_df.columns[20:])
-    new_row = {col: 1 if col in cat_inp else 0 for col in b.columns}
-    b = pd.concat([b, pd.DataFrame([new_row])], ignore_index=True)
+    inputs_cat=pd.DataFrame(columns=input_df.columns[20:])
+    new_row = {col: 1 if col in cat_inp else 0 for col in inputs_cat.columns}
+    inputs_cat = pd.concat([inputs_cat, pd.DataFrame([new_row])], ignore_index=True)
 
     # Covert numerical features
     inputs_num=pd.DataFrame([[LotFrontage,LotArea,OverallQual,YearBuilt,YearRemodAdd,MasVnrArea,
             BsmtFinSF1,BsmtUnfSF,TotalBsmtSF,FFlrSF,SFlrSF,GrLivArea,BsmtFullBath,
             FullBath,HalfBath,BedroomAbvGr,Fireplaces,GarageArea,WoodDeckSF,OpenPorchSF]], 
             columns=df.drop(columns=['SalePrice']).select_dtypes(exclude=['object']).columns)
-    inputs=pd.concat([inputs_num,b], axis=1)
+    inputs=pd.concat([inputs_num,inputs_cat], axis=1)
 
     #Normalization
     scaler = MinMaxScaler()
-    ffinal_df=scaler.fit_transform(ffinal_df)
-    # ffinal_df
+    input_df=scaler.fit_transform(input_df)
     inputs_scaled=scaler.transform(inputs)
-    # inputs_scaled
-    exp_output=model.predict(inputs_scaled)
+    output_price=model.predict(inputs_scaled)
 
-    st.header(f'Predicted Price : $ {np.round(exp_output[0])}')
+    st.header(f'Predicted Price : $ {np.round(output_price[0])}')
 
 elif option=='Information':
     st.header('Information of Parameters \n\n')
